@@ -4,19 +4,12 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace RyuFoodClub.Model
 {
-    public class DogEvent
+    public class Dog
    {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
-        public DateTime Time { get; set; }
-        [BsonElement("Name")]
-        public string Name { get; set; } 
-          
+        public string Name { get; set; }
+        public int Age { get; set; } 
    } 
 }
-
-
-
-
-

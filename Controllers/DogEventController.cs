@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using RyuFoodClub.Model;
+using RyuFoodClub.Model.MongoDB;
 
 
 namespace RyuFoodClub.Controllers
@@ -14,19 +15,19 @@ namespace RyuFoodClub.Controllers
     public class DogEventController : ControllerBase
     {
         private readonly ILogger<DogEventController> _logger;
+        public readonly IDogEventService _dogEventService;
 
-        public DogEventController(ILogger<DogEventController> logger)
+        public DogEventController(IDogEventService dogEventService, ILogger<DogEventController> logger)
         {
             _logger = logger;
+            _dogEventService = dogEventService;
         }
 
         [HttpGet]
-        public IEnumerable<DogEvent> Get()
+        public async Task<ActionResult<IEnumerable<DogEvent>>> Get()
         {
-            var events = new List<DogEvent>();
-            events.Add(new DogEvent(DateTime.Now, "1st Event"));
-            events.Add(new DogEvent(DateTime.Now.AddHours(-1), "2nd Event"));
-            return events;
+            var events = await _dogEventService.Get();
+            return Ok(events.ToList());
         }
     }
 }
