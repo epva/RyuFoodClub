@@ -15,7 +15,7 @@ namespace RyuFoodClub.Controllers
     public class DogEventController : ControllerBase
     {
         private readonly ILogger<DogEventController> _logger;
-        public readonly IDogEventService _dogEventService;
+        private readonly IDogEventService _dogEventService;
 
         public DogEventController(IDogEventService dogEventService, ILogger<DogEventController> logger)
         {
@@ -26,8 +26,40 @@ namespace RyuFoodClub.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DogEvent>>> Get()
         {
-            var events = await _dogEventService.Get();
-            return Ok(events.ToList());
+            var dogEvents = await _dogEventService.Get();
+            return Ok(dogEvents.ToList());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<DogEvent>> GetById(string id)
+        {
+            var dogEvent = await _dogEventService.Get(id);
+            return Ok(dogEvent);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Create(DogEvent dogEvent)
+        {
+            await _dogEventService.Create(dogEvent);
+            return NoContent();
+        }
+
+        [HttpPut]
+        public async Task<ActionResult> Update(DogEvent dogEvent)
+        {
+            await Task.Run(() =>
+                _dogEventService.Update(dogEvent.Id, dogEvent)
+            );
+            return NoContent();
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult> Delete(DogEvent dogEvent)
+        {
+            await Task.Run(() => 
+                _dogEventService.Delete(dogEvent.Id)
+            );
+            return NoContent();
         }
     }
 }
