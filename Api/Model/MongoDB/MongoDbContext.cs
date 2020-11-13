@@ -1,7 +1,6 @@
 using MongoDB.Driver;
 using RyuFoodClub;
 using Microsoft.Extensions.Options;
-using RyuFoodClub.Model;
 
 namespace RyuFoodClub.Model.MongoDB
 {

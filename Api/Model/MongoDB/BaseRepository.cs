@@ -12,13 +12,13 @@ namespace RyuFoodClub.Model.MongoDB
         IBaseRepository<TEntity>
         where TEntity : class
     {
-        protected readonly IMongoDbContext _mongoContext;
+        protected readonly IMongoDbContext _context;
         protected IMongoCollection<TEntity> _dbCollection;
- 
+  
         protected BaseRepository(IMongoDbContext context)
         {
-            _mongoContext = context;
-            _dbCollection = _mongoContext.GetCollection<TEntity>(typeof(TEntity).Name);
+            _context = context;
+            _dbCollection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
         }
         public async Task Create(TEntity obj)
         {
@@ -26,7 +26,7 @@ namespace RyuFoodClub.Model.MongoDB
             {
                 throw new ArgumentNullException(typeof(TEntity).Name + " object is null");
             }
-            _dbCollection = _mongoContext.GetCollection<TEntity>(typeof(TEntity).Name);
+            _dbCollection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
             await _dbCollection.InsertOneAsync(obj);
         }
  
@@ -47,17 +47,11 @@ namespace RyuFoodClub.Model.MongoDB
         public async Task<TEntity> Get(string id)
         {
             //ex. 5dc1039a1521eaa36835e541
- 
             var objectId = new ObjectId(id);
- 
             FilterDefinition<TEntity> filter = Builders<TEntity>.Filter.Eq("_id", objectId);
- 
-            _dbCollection = _mongoContext.GetCollection<TEntity>(typeof(TEntity).Name);
- 
+            _dbCollection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
             return await _dbCollection.FindAsync(filter).Result.FirstOrDefaultAsync();
- 
         }
- 
  
         public async Task<IEnumerable<TEntity>> Get()
         {

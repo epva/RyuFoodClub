@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using RyuFoodClub.Model;
+using RyuFoodClub.Model.CouchDB;
 using RyuFoodClub.Model.MongoDB;
 
 namespace RyuFoodClub
@@ -35,14 +36,31 @@ namespace RyuFoodClub
                 c.SwaggerDoc("v1",
                     new OpenApiInfo { Title = "RyuFoodClub", Version = "v1" });
             });
-            services.Configure<MongoDatabaseSettings>(
-                Configuration.GetSection(nameof(MongoDatabaseSettings)));
-            services.AddSingleton<IMongoDatabaseSettings>(sp =>
-                sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
-    
-            services.AddSingleton<IMongoDbContext, MongoDbContext>();
-            services.AddSingleton<IDogService, DogService>();
-            services.AddSingleton<IDogEventService, DogEventService>();
+            string databaseType = Configuration["DatabaseType"];
+            if (databaseType == "couchdb")
+            {
+                services.Configure<CouchDatabaseSettings>(
+                    Configuration.GetSection(nameof(CouchDatabaseSettings)));
+                services.AddSingleton<ICouchDatabaseSettings>(sp =>
+                    sp.GetRequiredService<IOptions<CouchDatabaseSettings>>().Value);
+        
+                services.AddSingleton<ICouchDbContext, CouchDbContext>();
+                services.AddSingleton<IDogService, RyuFoodClub.Model.CouchDB.DogService>();
+                services.AddSingleton<IDogEventService, RyuFoodClub.Model.CouchDB.DogEventService>();
+            }
+            else if (databaseType == "mongodb")
+            {  
+                services.Configure<MongoDatabaseSettings>(
+                    Configuration.GetSection(nameof(MongoDatabaseSettings)));
+                services.AddSingleton<IMongoDatabaseSettings>(sp =>
+                    sp.GetRequiredService<IOptions<MongoDatabaseSettings>>().Value);
+        
+                services.AddSingleton<IMongoDbContext, MongoDbContext>();
+                services.AddSingleton<IDogService,
+                    RyuFoodClub.Model.MongoDB.DogService>();
+                services.AddSingleton<IDogEventService,
+                    RyuFoodClub.Model.MongoDB.DogEventService>();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
