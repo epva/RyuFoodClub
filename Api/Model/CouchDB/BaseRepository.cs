@@ -20,7 +20,7 @@ namespace RyuFoodClub.Model.CouchDB
         protected BaseRepository(ICouchDbContext context)
         {
             _context = context;
-            _dbCollection = _context.GetCollection<TEntity>(typeof(TEntity).Name);
+            _dbCollection = _context.GetCollection<TEntity>(typeof(TEntity).Name.ToLower());
         }
 
         public async Task Create(TEntity obj)
