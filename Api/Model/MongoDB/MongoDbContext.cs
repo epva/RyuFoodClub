@@ -8,7 +8,6 @@ namespace RyuFoodClub.Model.MongoDB
    {
        private IMongoDatabase _db { get; set; }
        private MongoClient _mongoClient { get; set; }
-       public IClientSessionHandle Session { get; set; }
        public MongoDbContext(IOptions<MongoDatabaseSettings> configuration)
        {
            _mongoClient = new MongoClient(configuration.Value.ConnectionString);

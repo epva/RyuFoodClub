@@ -30,7 +30,7 @@ namespace RyuFoodClub.Controllers
             return Ok(dogEvents.ToList());
         }
 
-        [HttpGet]
+        [HttpGet("{id}")]
         public async Task<ActionResult<DogEvent>> GetById(string id)
         {
             var dogEvent = await _dogEventService.Get(id);

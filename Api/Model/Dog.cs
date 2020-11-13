@@ -9,12 +9,8 @@ namespace RyuFoodClub.Model
    {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
-        public override string Id 
-        {
-             get { return base.Id; }
-             set  { base.Id = value; }
-        }
+        public string IdMongo { get; set; }
         public string Name { get; set; }
-        public int Age { get; set; } 
+        public int Age { get; set; }
    } 
 }
